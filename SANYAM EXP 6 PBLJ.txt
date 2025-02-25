@@ -1,0 +1,128 @@
+Q1)Easy Level: Write a program to sort a list of Employee objects (name, age, salary) using lambda expressions. 
+
+SOLN:
+#CODE
+import java.util.*;
+
+class Employee {
+    String name;
+    int age;
+    double salary;
+
+    Employee(String name, int age, double salary) {
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+    }
+
+    public String toString() {
+        return name + ", " + age + ", " + salary;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        List<Employee> employees = Arrays.asList(
+                new Employee("Alice", 30, 60000),
+                new Employee("Bob", 25, 50000),
+                new Employee("Charlie", 35, 70000)
+        );
+
+        employees.stream()
+                .sorted((e1, e2) -> Double.compare(e1.salary, e2.salary))
+                .forEach(System.out::println);
+    }
+}
+
+
+Q2) Medium Level: Create a program to use lambda expressions and stream operations to filter students scoring above 75%, sort them by marks, and display their names.
+
+SOLN:
+#CODE
+import java.util.*;
+import java.util.stream.*;
+
+class Student {
+    String name;
+    int marks;
+
+    Student(String name, int marks) {
+        this.name = name;
+        this.marks = marks;
+    }
+
+    public String toString() {
+        return name + ": " + marks + "%";
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        List<Student> students = Arrays.asList(
+                new Student("John", 80),
+                new Student("Jane", 60),
+                new Student("Tom", 90),
+                new Student("Emma", 85)
+        );
+
+        students.stream()
+                .filter(s -> s.marks > 75)
+                .sorted(Comparator.comparingInt(s -> s.marks))
+                .forEach(s -> System.out.println(s.name));
+    }
+}
+
+Q3)Hard Level: Write a Java program to process a large dataset of products using streams. Perform operations such as grouping products by category, finding the most expensive product in each category, and calculating the average price of all products.
+
+SOLN:
+#CODE
+import java.util.*;
+import java.util.stream.*;
+
+class Product {
+    String name;
+    String category;
+    double price;
+
+    Product(String name, String category, double price) {
+        this.name = name;
+        this.category = category;
+        this.price = price;
+    }
+
+    public String toString() {
+        return name + ", " + category + ", " + price;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        List<Product> products = Arrays.asList(
+                new Product("Laptop", "Electronics", 1200),
+                new Product("Smartphone", "Electronics", 800),
+                new Product("Shirt", "Clothing", 40),
+                new Product("Jeans", "Clothing", 60),
+                new Product("Tablet", "Electronics", 500),
+                new Product("Shoes", "Clothing", 100)
+        );
+
+        Map<String, List<Product>> groupedByCategory = products.stream()
+                .collect(Collectors.groupingBy(p -> p.category));
+
+        groupedByCategory.forEach((category, productList) -> {
+            System.out.println("Category: " + category);
+            Product mostExpensive = productList.stream()
+                    .max(Comparator.comparingDouble(p -> p.price))
+                    .get();
+            double averagePrice = productList.stream()
+                    .mapToDouble(p -> p.price)
+                    .average()
+                    .orElse(0);
+
+            System.out.println("Most Expensive Product: " + mostExpensive.name + " - " + mostExpensive.price);
+            System.out.println("Average Price: " + averagePrice);
+            System.out.println();
+        });
+    }
+}
+
